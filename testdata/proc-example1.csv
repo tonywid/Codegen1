@@ -1,0 +1,10 @@
+cd;jn;statement;parameter;template;comment
+data;;;;WRITE 'hallo';
+;;loop-begin;;;
+;;;;WRITE 'loop-1 number:' %sys-fieldsequ%;
+;;;;WRITE 'loop-2 with' %col-fieldname%;
+;;;any;WRITE 'was any field' %col-fieldname%;
+;;;jn;WRITE 'was jn field' %col-fieldname%;
+;;;all;WRITE 'was all field' %col-fieldname%;
+;;loop-end;;;
+;;;;WRITE 'the end';

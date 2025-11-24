@@ -1,0 +1,14 @@
+was noch kommt:
+setstring;<varname>,<value>
+setint;...
+
+
+datatype;<spaltenname>
+
+;empty ... wenn datatyp=space
+;any ... wenn datatyp=any value (aber nicht space)
+;(blank) oder all ... datatyp wird nicht geprüft
+;<value> ... wenn datayp=value
+;else ... wenn datatyp=not space, aber keinen der angegebenen werte
+dies wird zunext nicht implementiert
+
