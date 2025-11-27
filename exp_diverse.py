@@ -1,3 +1,10 @@
+import sys
+
+print(sys.path) # shows all directories Python searches
+
+from wdlib1 import wdstd
+print(wdstd.is_int("abc"))
+
 
 teststring = ''
 if teststring:

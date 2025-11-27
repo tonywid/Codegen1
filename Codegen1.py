@@ -77,13 +77,13 @@ def datadict_getnext():
         if datadict_ix >= len(datadict):
             datadict_ix = 0
             break
-            datarow = datadict[datadict_ix]
-            if datarow['cd'] and datarow['cd'] in 'cx*':
-                continue
-            if datarow['dataset'] == loop_param or \
-                    loop_param == '':
-                data_sequ += 1
-                break
+        datarow = datadict[datadict_ix]
+        if datarow['cd'] and datarow['cd'] in 'cx*':
+            continue
+        if datarow['dataset'] == loop_param or \
+                loop_param == '':
+            data_sequ += 1
+            break
     return
 
 
@@ -129,6 +129,8 @@ while proc_is_running:
     procrow = proclist[proc_ix]
     proc_stmt = procrow [proc_col_stmt]
     if procrow[0] and procrow[0] in 'cx*':
+        if procrow[0] == '':
+            print('aber hallo')
         continue
     if proc_stmt == 'loop-begin':
         loop_ix_begin = proc_ix
