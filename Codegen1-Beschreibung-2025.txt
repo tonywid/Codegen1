@@ -1,10 +1,44 @@
+Codegen1
+========
+
+Procedure csv
+-------------
+
+Layout of the columns:
+- column titles are not relevant)
+- columns:
+cd;jn;statement;parameter;template;comment
+
+
 was noch kommt:
-setstring;<varname>,<value>
-setint;...
+---------------
+
+setint;<varname>,<value>
 
 
-datatype;<spaltenname>
+Procedure statements
+--------------------
 
+loop-begin
+loop-end
+part
+(empty)
+setstr
+
+Column headers
+--------------
+
+column "cd" (comment/data)
+cx* is a comment line
+anything else (also empty) is a data line
+
+column "dataset"
+loop-begin can specify the dataset as param
+
+
+column "datatype"
+
+as param for statements "part" and (empty) within loops
 ;empty ... wenn datatyp=space
 ;any ... wenn datatyp=any value (aber nicht space)
 ;(blank) oder all ... datatyp wird nicht geprüft
@@ -12,3 +46,12 @@ datatype;<spaltenname>
 ;else ... wenn datatyp=not space, aber keinen der angegebenen werte
 dies wird zunext nicht implementiert
 
+
+Placeholders
+------------
+
+%col-fieldname%
+
+%sys-fieldsequ%
+
+%var-varname%

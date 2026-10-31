@@ -1,9 +1,10 @@
 
-
 import csv
-import re
 
 from wdlib1 import wdstd
+
+import codegen_helper
+from codegen_helper import extract_placeholders
 
 # Replace 'your_file.csv' with the path to your actual CSV file
 filename = 'your_file.csv'
@@ -34,6 +35,11 @@ proc_col_template = 4
 proc_is_running = True
 proc_ix = 0
 
+line_prepared = ''
+line_is_prepared = False
+
+variablesdict = {}
+
 filename = 'your_file.csv'
 filename = wdstd.get_valid_filename('your data csv filename', filename)
 
@@ -44,9 +50,6 @@ with open(filename, newline='', encoding='ansi') as csvfile:
     for row in reader:
         datadict.append(row)
 
-
-def extract_placeholders(text: str) -> list[str]:
-    return re.findall(r'%([^%]+)%', text)
 
 def datadict_getfirst():
     global datadict_ix
@@ -98,6 +101,9 @@ def textrow_replace(templateline):
                 case 'test':
                     templateline = templateline.replace('%' + holder + '%', 'something')
                 case _: pass
+        if holder.startswith('var-'):
+            textvalue = variablesdict[holder]
+            templateline = templateline.replace('%' + holder + '%', textvalue)
     return templateline
 
 
@@ -109,8 +115,24 @@ def datarow_replace(templateline, datarow):
             templateline = templateline.replace('%' + holder + '%',datarow[datacol])
     return templateline
 
+# overlays line_part on line_prepared
+# line_prepared : this is my line
+# line_part     :                  next part
+# returns       : this is my line  next part
+def overlay(line_prepared, line_part):
+    pos = len(line_part) - len(line_part.lstrip())
+
+    if pos > len(line_prepared):
+        line_prepared += " " * (pos - len(line_prepared)) + line_part.lstrip()
+    else:
+        line_prepared += " " + line_part.lstrip()
+
+    return line_prepared
+
 
 def proc_datarow (procrow, datarow):
+    global line_is_prepared
+    global line_prepared
     templateline = procrow[proc_col_template]
     templateline = textrow_replace(templateline)
     data_datatype = datarow['datatype']
@@ -118,7 +140,21 @@ def proc_datarow (procrow, datarow):
     if (proc_datatype == '' or proc_datatype == 'all') or \
         proc_datatype == 'any' and data_datatype != '' or \
         proc_datatype == data_datatype:
-        print(datarow_replace(templateline, datarow))
+        line_part = datarow_replace(templateline, datarow)
+        proc_stmt = procrow[proc_col_stmt]
+        if proc_stmt == "part":
+            if line_is_prepared:
+                line_prepared = overlay(line_prepared, line_part)
+            else:
+                line_is_prepared = True
+                line_prepared = line_part
+        else:
+            if line_is_prepared:
+                line_prepared = overlay(line_prepared, line_part)
+                line_is_prepared = False
+            else:
+                line_prepared = line_part
+            print (line_prepared)
     return
 
 
@@ -156,12 +192,16 @@ while proc_is_running:
         else:
             proc_ix = loop_ix_begin
         continue
-    if proc_stmt == '':
+    if proc_stmt == '' or proc_stmt == 'part':
         if loop_is_running:
             proc_datarow(procrow, datarow)
         else:
             templateline = procrow[proc_col_template]
             templateline = textrow_replace(templateline)
             print(textrow_replace(templateline))
+        continue
+    if proc_stmt == "setstr":
+        proc_param = procrow[proc_col_param]
+        codegen_helper.process_defstr(variablesdict,proc_param)
         continue
     print("wrong statement")

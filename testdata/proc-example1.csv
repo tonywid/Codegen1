@@ -4,7 +4,16 @@ data;;;;WRITE 'hallo';
 ;;;;WRITE 'loop-1 number:' %sys-fieldsequ%;
 ;;;;WRITE 'loop-2 with' %col-fieldname%;
 ;;;any;WRITE 'was any field' %col-fieldname%;
+;;part;;WRITE;
+;;part;;               i was here;
+;;;;                           %col-fieldname% eol
+;;part;;WRITE;
+;;part;;            i was here;
+;;;;                  this part overlaps
+;;;xxx;WRITE %col-ding%         %p%TO %col-test%
 ;;;jn;WRITE 'was jn field' %col-fieldname%;
 ;;;all;WRITE 'was all field' %col-fieldname%;
 ;;loop-end;;;
-;;;;WRITE 'the end';
+;;setstr;"var-myvar,"" ist da """;"";
+;;;;WRITE 'the end' %var-myvar%;
+;;setstring;"teststring,""my value""";WRITE %col-ding%         %p%TO %col-test%
